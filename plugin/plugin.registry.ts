@@ -19,10 +19,4 @@ export class PluginRegistry {
         if (!plugin) throw new Error(`Plugin not found for type: "${type}"`);
         return plugin as ReturnType<typeof this.getTyped<T>>;
     }
-
-    get(type: string): AnyPlugin {
-        const plugin = this.plugins.get(type);
-        if (!plugin) throw new Error(`Plugin not found for type: "${type}"`);
-        return plugin;
-    }
 }
