@@ -1,20 +1,18 @@
-import type { QuestionPlugin } from '../plugin.registry';
+import type { QuestionPlugin, MatchingData } from "../../types/plugin.types";
+import type { Question, QuestionTypeAnswerMap } from "../../types/question.types";
 
-export class MatchingPlugin implements QuestionPlugin {
-    type = 'matching';
+export class MatchingPlugin implements QuestionPlugin<MatchingData, QuestionTypeAnswerMap["matching"]> {
+    type = "matching" as const;
 
-    validate(q: any) {
-        return typeof q.data?.correctMapping === 'object';
-    }
-
-    grade(q: any, answer: Record<string, string>) {
-        if (!q.data || !q.data.correctMapping) return 0;
+    grade(q: Question<MatchingData>, answer: QuestionTypeAnswerMap["matching"]): number {
         const correct = q.data.correctMapping;
-        let score = 0;
         const total = Object.keys(correct).length;
+        if (total === 0) return 0;
+
+        let matchCount = 0;
         for (const key in correct) {
-            if (answer[key] === correct[key]) score += q.points / total;
+            if (answer[key] === correct[key]) matchCount++;
         }
-        return score;
+        return (matchCount / total) * q.points;
     }
 }
