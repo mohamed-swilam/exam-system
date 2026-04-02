@@ -43,13 +43,13 @@ describe("AttemptService", () => {
     registry.register(new SingleChoicePlugin());
     registry.register(new MatchingPlugin());
 
-    it("should calculate correct total score with breakdown", () => {
+    it("should calculate correct total score with breakdown", async () => {
         const service = new AttemptService(registry, [
             { id: "q1", examId: "e1", type: "single_choice", points: 5,  data: { options: [1,2,3], correctAnswer: 2 } },
             { id: "q2", examId: "e1", type: "matching",       points: 10, data: { correctMapping: { egypt: "cairo", france: "paris" } } },
         ]);
 
-        const result = service.submit({
+        const result = await service.submit({
             q1: 2,                                     // correct  → 5pts
             q2: { egypt: "cairo", france: "wrong" },  // partial  → 5pts
         });
@@ -60,12 +60,12 @@ describe("AttemptService", () => {
         expect(result.breakdown[1]?.earned).toBe(5);
     });
 
-    it("should score 0 for unanswered questions", () => {
+    it("should score 0 for unanswered questions", async () => {
         const service = new AttemptService(registry, [
             { id: "q1", examId: "e1", type: "single_choice", points: 5, data: { options: [1,2,3], correctAnswer: 2 } },
         ]);
 
-        const result = service.submit({});
+        const result = await service.submit({});
         expect(result.score).toBe(0);
         expect(result.breakdown[0]?.earned).toBe(0);
     });

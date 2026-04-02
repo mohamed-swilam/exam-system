@@ -1,19 +1,16 @@
-import type { Question } from "./question.types";
+import type { AnswerOf, DataOf, Question, QuestionTypeAnswerMap } from "./question.types";
 
 export interface QuestionPlugin<TData, TAnswer> {
     type: string;
     grade(question: Question<TData>, answer: TAnswer): number;
 }
 
-export interface SingleChoiceData {
-    options: number[] | string[];
-    correctAnswer: number | string;
-}
+export type SingleChoiceData = DataOf<"single_choice">;
+export type MatchingData     = DataOf<"matching">;
 
-export interface MatchingData {
-    correctMapping: Record<string, string>;
-}
-
-export type AnyPlugin =
-    | QuestionPlugin<SingleChoiceData, number | string>
-    | QuestionPlugin<MatchingData, Record<string, string>>;
+export type AnyPlugin = {
+    [T in keyof QuestionTypeAnswerMap]: QuestionPlugin<
+        DataOf<T>,
+        AnswerOf<T>
+    >;
+}[keyof QuestionTypeAnswerMap];

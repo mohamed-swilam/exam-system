@@ -1,5 +1,5 @@
 import type { AnyPlugin } from "../types/plugin.types";
-import type { AnyQuestion, QuestionTypeAnswerMap } from "../types/question.types";
+import type { AnswerOf, AnyQuestion} from "../types/question.types";
 import { SingleChoicePlugin, MatchingPlugin } from './question-plugin';
 
 export class PluginRegistry {
@@ -14,7 +14,7 @@ export class PluginRegistry {
 
     getTyped<T extends AnyQuestion["type"]>(
         type: T
-    ): AnyPlugin & { grade(q: Extract<AnyQuestion, { type: T }>, a: QuestionTypeAnswerMap[T]): number } {
+    ): AnyPlugin & { grade(q: Extract<AnyQuestion, { type: T }>, a: AnswerOf<T>): number } {
         const plugin = this.plugins.get(type);
         if (!plugin) throw new Error(`Plugin not found for type: "${type}"`);
         return plugin as ReturnType<typeof this.getTyped<T>>;

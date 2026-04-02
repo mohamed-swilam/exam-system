@@ -17,11 +17,23 @@ export interface MatchingQuestion extends Question<MatchingData> {
 }
 
 export interface QuestionTypeAnswerMap {
-    single_choice: number | string;
-    matching: Record<string, string>;
+    single_choice: {
+        data: {
+            options: number[] | string[];
+            correctAnswer: number | string;
+        };
+        answer: number | string;
+    };
+    matching: {
+        data: {
+            correctMapping: Record<string, string>;
+        };
+        answer: Record<string, string>;
+    };
 }
 
-export type AnswerOf<T extends AnyQuestion["type"]> = QuestionTypeAnswerMap[T];
+export type AnswerOf<T extends keyof QuestionTypeAnswerMap> = QuestionTypeAnswerMap[T]["answer"];
+export type DataOf<T extends keyof QuestionTypeAnswerMap> = QuestionTypeAnswerMap[T]["data"];
 
 export type GradeInput = {
     [Q in AnyQuestion as Q["id"]]: AnswerOf<Q["type"]>;

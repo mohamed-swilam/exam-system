@@ -1,10 +1,10 @@
 import type { QuestionPlugin, MatchingData } from "../../types/plugin.types";
-import type { Question, QuestionTypeAnswerMap } from "../../types/question.types";
+import type { AnswerOf, Question, QuestionTypeAnswerMap } from "../../types/question.types";
 
-export class MatchingPlugin implements QuestionPlugin<MatchingData, QuestionTypeAnswerMap["matching"]> {
+export class MatchingPlugin implements QuestionPlugin<MatchingData, AnswerOf<"matching">> {
     type = "matching" as const;
 
-    grade(q: Question<MatchingData>, answer: QuestionTypeAnswerMap["matching"]): number {
+    grade(q: Question<MatchingData>, answer: AnswerOf<"matching">): number {
         const correct = q.data.correctMapping;
         const total = Object.keys(correct).length;
         if (total === 0) return 0;

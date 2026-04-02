@@ -1,6 +1,6 @@
 import type { PluginRegistry } from "../plugin/plugin.registry";
 import type { AttemptResult } from "../types/attempt.types";
-import type { AnyQuestion, GradeInput, QuestionTypeAnswerMap } from "../types/question.types";
+import type { AnswerOf, AnyQuestion, GradeInput } from "../types/question.types";
 
 export class AttemptService {
     constructor(
@@ -20,7 +20,7 @@ export class AttemptService {
 
     private gradeQuestion<T extends AnyQuestion["type"]>(
         q: Extract<AnyQuestion, { type: T }>,
-        answer: QuestionTypeAnswerMap[T]
+        answer: AnswerOf<T>
     ) {
         const plugin = this.registry.getTyped(q.type);
         return plugin.grade(q, answer);
